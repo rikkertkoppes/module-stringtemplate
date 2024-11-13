@@ -23,13 +23,16 @@ function evalExpr(node: Expr, context: any): string {
 }
 
 function evalName(node: Name, context: any) {
-    let parts = node.value.map((v) => v.value);
-    var value = context[parts.shift() || ""];
+    let parts = node.value;
+    let identOrIndex = parts.shift();
+    var value = context[identOrIndex?.value ?? ""];
     while (parts.length && value) {
-        if (Array.isArray(value)) {
-            value = value.map((v) => v[parts.shift() || ""]);
+        let identOrIndex = parts.shift();
+        let key = identOrIndex?.value ?? "";
+        if (Array.isArray(value) && identOrIndex?.type === "ident") {
+            value = value.map((v) => v[key]);
         } else {
-            value = value[parts.shift() || ""];
+            value = value[key];
         }
     }
     return value || "";

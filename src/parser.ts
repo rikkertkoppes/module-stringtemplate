@@ -1,7 +1,7 @@
 import { any, many, optional, sequence } from "./combinators";
 import { map } from "./helpers";
 import { regex, str } from "./parsers";
-import { Comb, Expr, Ident, Name, Text, Node, Num } from "./types";
+import { Comb, Expr, Ident, Name, Text, Node, Num, Index } from "./types";
 
 function tokenize(str: string): string[] {
     return str.split(/(\w+|\|\||\s+|\$\{|\}|[\.\?"'])/g).filter((x) => !!x);
@@ -16,14 +16,21 @@ const ident = map<string, Ident>(
         value,
     })
 );
+const index = map<string, Index>(regex(/[0-9]+/g, "identifier"), (value) => ({
+    type: "index",
+    value: parseInt(value, 10),
+}));
 const whitespace = optional(regex(/\s+/, "whitespace"));
+
+const identOrIndex = any<any>([ident, index]);
+
 const trailingIdent = map<any, Ident>(
-    sequence<any>([str("."), ident]),
+    sequence<any>([str("."), identOrIndex]),
     ([dot, value]) => value
 );
 // name = ident ('.' ident)*
 const name = map<any, Name>(
-    sequence<any>([ident, many(trailingIdent)]),
+    sequence<any>([identOrIndex, many(trailingIdent)]),
     ([variable, rest]) => ({
         type: "name",
         value: [variable, ...rest],

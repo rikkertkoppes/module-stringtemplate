@@ -32,6 +32,7 @@ export type Wrapped = { type: "wrapped"; value: Node };
 export type Text = { type: "text"; value: string };
 export type Num = { type: "number"; value: number };
 export type Ident = { type: "ident"; value: string };
+export type Index = { type: "index"; value: number };
 export type Name = { type: "name"; value: Ident[] };
 export type Comb = { type: "comb"; operator: string };
 export type Expr = { type: "expr"; operator: string; left: Node; right: Node };
