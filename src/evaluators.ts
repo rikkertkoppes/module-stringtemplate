@@ -1,6 +1,6 @@
 import { Expr, Name, Node } from "./types";
 
-function evalExpr(node: Expr, context: any) {
+function evalExpr(node: Expr, context: any): string {
     switch (node.operator) {
         case "||": {
             return (
@@ -35,7 +35,7 @@ function evalName(node: Name, context: any) {
     return value || "";
 }
 
-export function evaluate(ast: Node[], context: any) {
+export function evaluate(ast: Node[], context: any): string {
     return ast.reduce((str, node) => {
         switch (node.type) {
             case "wrapped": {

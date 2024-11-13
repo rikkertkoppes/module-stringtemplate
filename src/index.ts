@@ -12,7 +12,7 @@ export function interpolate(str: string, context: any): string {
 export function deepInterpolate(
     obj: string | Record<string, any>,
     context: any = {}
-) {
+): any {
     if (typeof obj === "string") {
         return interpolate(obj, context);
     }
